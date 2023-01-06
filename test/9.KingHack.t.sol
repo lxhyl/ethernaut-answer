@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 
 import {King} from "../src/9.King.sol";
+import {BytesLib} from "../src/library/bytes.sol";
 
 string constant hackRevert = "HaHaHa";
 contract Hack {
@@ -11,10 +12,10 @@ contract Hack {
   function hack(address payable king) external payable {
      king.call{value:msg.value}("");
      startHack = true;
+     console.log("===start hack===");
   }
 
   receive() external payable {
-    console.log("hack receiver", startHack);
     if(startHack){
       revert(hackRevert);
     }
@@ -24,6 +25,7 @@ contract Hack {
 
 
 contract KingHackTest is Test {
+   using BytesLib for bytes;
    address payable king;
  
    address payable hackContract;
@@ -48,12 +50,14 @@ contract KingHackTest is Test {
    function testKingHack() public {
     
       vm.prank(alice);
-      king.call{value:100}("");
+      (bool aliceSuccess,) = king.call{value:100}("");
+      assertEq(aliceSuccess, true);
       assertEq(address(0).balance, 100);
       assertEq(King(king)._king(), alice);
      
       vm.prank(bob);
-      king.call{value:200}("");
+      (bool bobSuccess,) = king.call{value:200}("");
+      assertEq(bobSuccess, true);
       assertEq(alice.balance, 200);
       assertEq(King(king)._king(), bob);
 
@@ -62,9 +66,17 @@ contract KingHackTest is Test {
       assertEq(bob.balance, 300);
       assertEq(King(king)._king(), hackContract);
 
-      vm.prank(user);
+
+      // user call king. tx must failed.
+      vm.startPrank(user);
       (bool success,bytes memory res) = king.call{value:400}("");
       assertEq(success, false);
-      console.log(string(res));
+      console.logBytes(res);
+      console.log("res length:", res.length);
+      console.log("res:",string(res));
+      if(res.length >= 100){
+        res = res.slice(36,64);
+        console.log("res:",string(res));
+      }
    }
 }

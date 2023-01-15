@@ -17,6 +17,7 @@ contract Hack {
 
   receive() external payable {
     if(startHack){
+      console.log("Hack revert msg.sender", msg.sender,tx.origin, msg.value);
       revert(hackRevert);
     }
   }
@@ -74,10 +75,13 @@ contract KingHackTest is Test {
       console.log("====res====");
       console.logBytes(res);
       console.log("res length:", res.length);
-      console.log("res:",string(res));
-      if(res.length >= 100){
-        res = res.slice(36,64);
-        console.log("res:",string(res));
-      }
+      console.logBytes(res.slice(0,4));
+      console.logBytes(res.slice(4,32));
+      console.logBytes(res.slice(36,32));
+      console.logBytes(res.slice(68,32));
+     
+     
+      console.log("res bytes 2 string",string(res.slice(4,96)));
+      console.logBytes(bytes(hackRevert));
    }
 }

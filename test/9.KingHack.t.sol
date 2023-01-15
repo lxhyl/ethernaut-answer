@@ -71,6 +71,7 @@ contract KingHackTest is Test {
       vm.startPrank(user);
       (bool success,bytes memory res) = king.call{value:400}("");
       assertEq(success, false);
+      console.log("====res====");
       console.logBytes(res);
       console.log("res length:", res.length);
       console.log("res:",string(res));

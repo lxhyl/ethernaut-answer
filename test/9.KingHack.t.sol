@@ -85,3 +85,11 @@ contract KingHackTest is Test {
       console.logBytes(bytes(hackRevert));
    }
 }
+
+// custom error response: 
+
+// 
+// 0x08c379a0    keccak256(Error(string));                            // Function selector for Error(string)
+// 0x0000000000000000000000000000000000000000000000000000000000000020 // Data offset
+// 0x000000000000000000000000000000000000000000000000000000000000001a // String length
+// 0x4e6f7420656e6f7567682045746865722070726f76696465642e000000000000 // String data

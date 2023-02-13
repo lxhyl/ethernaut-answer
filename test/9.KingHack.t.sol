@@ -82,12 +82,12 @@ contract KingHackTest is Test {
      
      
       console.log("res bytes 2 string",string(res.slice(4,96)));
-      console.logBytes(bytes(hackRevert));
+      console.logBytes(bytes(hackRevert)); 
    }
 }
 
 // custom error response: 
-
+// https://docs.soliditylang.org/en/v0.8.17/control-structures.html#panic-via-assert-and-error-via-require
 // 
 // 0x08c379a0    keccak256(Error(string));                            // Function selector for Error(string)
 // 0x0000000000000000000000000000000000000000000000000000000000000020 // Data offset
